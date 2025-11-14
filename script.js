@@ -118,22 +118,48 @@ function unlockGift() {
 
 // Bắt đầu phát nhạc
 function startMusic() {
-    // Thử phát nhạc (có thể bị chặn bởi browser policy)
+    // Đặt volume
     backgroundMusic.volume = volumeControl.value / 100;
     
+    // Load nhạc trước
+    backgroundMusic.load();
+    
+    // Thử phát nhạc (có thể bị chặn bởi browser policy)
     const playPromise = backgroundMusic.play();
     
     if (playPromise !== undefined) {
         playPromise
             .then(() => {
                 // Nhạc đã phát thành công
-                musicToggle.classList.remove('paused');
+                updateMusicButtonIcon();
+                console.log('Nhạc đã bắt đầu phát!');
             })
             .catch(error => {
                 // Browser yêu cầu user interaction
-                console.log('Nhạc cần user interaction để phát. Sẽ tự động phát sau khi user tương tác.');
-                // Nhạc sẽ tự động phát khi user click vào nút
+                console.log('Nhạc cần user interaction để phát. Click vào nút để bật nhạc.');
+                updateMusicButtonIcon();
             });
+    }
+}
+
+// Thử phát nhạc khi user tương tác lần đầu
+document.addEventListener('click', function tryPlayMusic() {
+    if (backgroundMusic.paused && !musicToggle.classList.contains('user-interacted')) {
+        startMusic();
+        musicToggle.classList.add('user-interacted');
+    }
+}, { once: true });
+
+// Cập nhật icon nút nhạc
+function updateMusicButtonIcon() {
+    if (backgroundMusic.paused) {
+        musicToggle.textContent = '▶️';
+        musicToggle.classList.add('paused');
+        musicToggle.title = 'Phát nhạc';
+    } else {
+        musicToggle.textContent = '⏸️';
+        musicToggle.classList.remove('paused');
+        musicToggle.title = 'Tạm dừng nhạc';
     }
 }
 
@@ -141,15 +167,20 @@ function startMusic() {
 musicToggle.addEventListener('click', function() {
     if (backgroundMusic.paused) {
         backgroundMusic.play().then(() => {
-            musicToggle.classList.remove('paused');
+            updateMusicButtonIcon();
         }).catch(error => {
             console.log('Không thể phát nhạc:', error);
         });
     } else {
         backgroundMusic.pause();
-        musicToggle.classList.add('paused');
+        updateMusicButtonIcon();
     }
 });
+
+// Cập nhật icon khi nhạc thay đổi trạng thái
+backgroundMusic.addEventListener('play', updateMusicButtonIcon);
+backgroundMusic.addEventListener('pause', updateMusicButtonIcon);
+backgroundMusic.addEventListener('ended', updateMusicButtonIcon);
 
 // Xử lý điều chỉnh volume
 volumeControl.addEventListener('input', function() {
@@ -356,11 +387,8 @@ let photoIndex = 0;
 let photoInterval = null;
 
 // Tạo pattern hình trái tim
-function getHeartPositions(count) {
+function getHeartPositions(count, centerX, centerY, scale) {
     const positions = [];
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const scale = Math.min(window.innerWidth, window.innerHeight) * 0.35;
     
     for (let i = 0; i < count; i++) {
         const t = (i / count) * 2 * Math.PI;
@@ -375,6 +403,70 @@ function getHeartPositions(count) {
     }
     
     return positions;
+}
+
+// Tạo nhiều trái tim
+function createMultipleHearts(images) {
+    if (!images || images.length === 0) {
+        console.log('Không có ảnh để tạo trái tim');
+        return;
+    }
+    
+    const totalImages = images.length;
+    const numHearts = 4; // Số lượng trái tim
+    const imagesPerHeart = Math.floor(totalImages / numHearts);
+    const remainingImages = totalImages % numHearts;
+    
+    // Vị trí 4 trái tim: trên trái, trên phải, dưới trái, dưới phải
+    const heartConfigs = [
+        { centerX: window.innerWidth * 0.25, centerY: window.innerHeight * 0.35, scale: 0.22 },
+        { centerX: window.innerWidth * 0.75, centerY: window.innerHeight * 0.35, scale: 0.22 },
+        { centerX: window.innerWidth * 0.25, centerY: window.innerHeight * 0.75, scale: 0.22 },
+        { centerX: window.innerWidth * 0.75, centerY: window.innerHeight * 0.75, scale: 0.22 }
+    ];
+    
+    let imageIndex = 0;
+    
+    heartConfigs.forEach((config, heartIndex) => {
+        // Tính số ảnh cho trái tim này
+        let imagesForThisHeart = imagesPerHeart;
+        if (heartIndex < remainingImages) {
+            imagesForThisHeart += 1; // Phân bổ ảnh thừa cho các trái tim đầu
+        }
+        
+        // Lấy ảnh cho trái tim này
+        const heartImages = images.slice(imageIndex, imageIndex + imagesForThisHeart);
+        imageIndex += imagesForThisHeart;
+        
+        if (heartImages.length === 0) return;
+        
+        // Tạo vị trí cho trái tim này
+        const scaleValue = Math.min(window.innerWidth, window.innerHeight) * config.scale;
+        const heartPositions = getHeartPositions(
+            heartImages.length,
+            config.centerX,
+            config.centerY,
+            scaleValue
+        );
+        
+        // Sắp xếp ảnh vào trái tim với animation
+        heartImages.forEach((img, index) => {
+            if (index < heartPositions.length && img.parentNode) {
+                const pos = heartPositions[index];
+                img.classList.add('in-heart');
+                
+                // Animation mượt mà
+                setTimeout(() => {
+                    img.style.left = `${pos.x - 90}px`;
+                    img.style.top = `${pos.y - 90}px`;
+                    img.style.transform = 'translate(0, 0)';
+                    img.style.opacity = '1';
+                }, index * 20); // Stagger animation
+            }
+        });
+    });
+    
+    console.log(`Đã tạo ${numHearts} trái tim từ ${totalImages} ảnh`);
 }
 
 function showMemoryPhotos(images) {
@@ -431,21 +523,11 @@ function arrangeInHeart() {
         img.style.animation = 'none';
     });
     
-    // Tính toán vị trí hình trái tim
+    // Lấy tất cả ảnh hợp lệ
     const validPhotos = allLoadedPhotos.filter(img => img.style.display !== 'none');
-    const heartPositions = getHeartPositions(validPhotos.length);
     
-    // Sắp xếp ảnh vào vị trí trái tim
-    validPhotos.forEach((img, index) => {
-        if (index < heartPositions.length) {
-            const pos = heartPositions[index];
-            img.classList.add('in-heart');
-            img.style.left = `${pos.x - 90}px`; // 90 = width/2 (180px/2)
-            img.style.top = `${pos.y - 90}px`; // 90 = height/2 (180px/2)
-            img.style.transform = 'translate(0, 0)';
-            img.style.opacity = '1';
-        }
-    });
+    // Tạo nhiều trái tim từ ảnh
+    createMultipleHearts(validPhotos);
 }
 
 // Bắt đầu lyrics

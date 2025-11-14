@@ -1,0 +1,66 @@
+═══════════════════════════════════════════════════════════
+   HƯỚNG DẪN THÊM NHẠC VÀO WEBSITE
+═══════════════════════════════════════════════════════════
+
+📁 FOLDER NÀY DÙNG ĐỂ CHỨA FILE NHẠC
+
+✅ CÁCH THÊM NHẠC:
+
+1. Đặt file nhạc vào folder này với tên: background.mp3
+   (Hoặc background.ogg, background.wav)
+
+2. Các định dạng hỗ trợ:
+   ✅ .mp3  (Khuyến nghị - tương thích tốt nhất)
+   ✅ .ogg
+   ✅ .wav
+
+3. Tên file PHẢI là:
+   - background.mp3  HOẶC
+   - background.ogg  HOẶC
+   - background.wav
+
+═══════════════════════════════════════════════════════════
+
+🎵 TÍNH NĂNG NHẠC:
+
+- Nhạc sẽ tự động phát sau khi nhập password đúng
+- Nhạc sẽ tự động lặp lại (loop)
+- Có thể tắt/bật nhạc bằng nút 🎵 ở góc dưới bên phải
+- Có thể điều chỉnh âm lượng bằng thanh trượt
+
+═══════════════════════════════════════════════════════════
+
+⚠️ LƯU Ý:
+
+1. File nhạc nên có kích thước hợp lý:
+   - Khuyến nghị: dưới 5MB
+   - Tối đa: 100MB (giới hạn GitHub)
+
+2. Một số trình duyệt chặn autoplay audio:
+   - Nếu nhạc không tự phát, click vào nút 🎵 để bật
+   - Đây là tính năng bảo mật của trình duyệt
+
+3. Khi upload lên GitHub:
+   - PHẢI commit file nhạc vào folder music/
+   - File nhạc sẽ được lưu trong repository
+
+═══════════════════════════════════════════════════════════
+
+📝 VÍ DỤ:
+
+Folder music/ của bạn sẽ trông như thế này:
+   
+   music/
+   ├── background.mp3    ← File nhạc của bạn
+   ├── README.txt        ← File này
+   └── HUONG_DAN.txt     ← File hướng dẫn này
+
+═══════════════════════════════════════════════════════════
+
+💡 TIPS:
+
+- Nếu không có file nhạc, website vẫn hoạt động bình thường
+- Có thể dùng nhiều file nhạc (mp3, ogg, wav) - trình duyệt sẽ chọn file tương thích
+- Để đổi nhạc, chỉ cần thay file background.mp3 bằng file mới
+
+═══════════════════════════════════════════════════════════
