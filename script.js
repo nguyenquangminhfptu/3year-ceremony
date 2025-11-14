@@ -58,6 +58,8 @@ const initialButton = document.getElementById('initialButton');
 const passwordForm = document.getElementById('passwordForm');
 const passwordInput = document.getElementById('passwordInput');
 const submitPassword = document.getElementById('submitPassword');
+const showHintButton = document.getElementById('showHintButton');
+const hintMessage = document.getElementById('hintMessage');
 const errorMessage = document.getElementById('errorMessage');
 const cakeScreen = document.getElementById('cakeScreen');
 const blowCandleButton = document.getElementById('blowCandleButton');
@@ -83,6 +85,18 @@ submitPassword.addEventListener('click', checkPassword);
 passwordInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         checkPassword();
+    }
+});
+
+// Xử lý nút Show Hint
+showHintButton.addEventListener('click', function() {
+    if (hintMessage.classList.contains('hidden')) {
+        hintMessage.textContent = '💡 Nhập ngày chúng ta bắt đầu, không cách, viết liền mạch';
+        hintMessage.classList.remove('hidden');
+        showHintButton.textContent = 'Hide Hint';
+    } else {
+        hintMessage.classList.add('hidden');
+        showHintButton.textContent = 'Show Hint';
     }
 });
 
@@ -416,23 +430,16 @@ function createMultipleHearts(images) {
     const numHearts = 1; // Chỉ 1 trái tim lớn và rõ ràng
     const imagesPerHeart = totalImages; // Tất cả ảnh vào 1 trái tim
     
-    // Vị trí 1 trái tim: ở giữa màn hình
+    // Vị trí 1 trái tim: ở giữa màn hình, lớn hơn
     const heartConfigs = [
-        { centerX: window.innerWidth * 0.5, centerY: window.innerHeight * 0.5, scale: 0.5 }
+        { centerX: window.innerWidth * 0.5, centerY: window.innerHeight * 0.45, scale: 0.6 }
     ];
     
     let imageIndex = 0;
     
     heartConfigs.forEach((config, heartIndex) => {
-        // Tính số ảnh cho trái tim này
-        let imagesForThisHeart = imagesPerHeart;
-        if (heartIndex < remainingImages) {
-            imagesForThisHeart += 1; // Phân bổ ảnh thừa cho các trái tim đầu
-        }
-        
-        // Lấy ảnh cho trái tim này
-        const heartImages = images.slice(imageIndex, imageIndex + imagesForThisHeart);
-        imageIndex += imagesForThisHeart;
+        // Lấy tất cả ảnh cho trái tim này (vì chỉ có 1 trái tim)
+        const heartImages = images;
         
         if (heartImages.length === 0) return;
         
@@ -451,18 +458,32 @@ function createMultipleHearts(images) {
                 const pos = heartPositions[index];
                 img.classList.add('in-heart');
                 
-                // Animation mượt mà
+                // Đảm bảo ảnh hiển thị
+                img.style.opacity = '1';
+                img.style.display = 'block';
+                
+                // Animation mượt mà - ảnh sẽ tự động thu nhỏ từ 160px xuống 60px
                 setTimeout(() => {
-                    img.style.left = `${pos.x - 50}px`; // 50 = width/2 (100px/2)
-                    img.style.top = `${pos.y - 50}px`; // 50 = height/2 (100px/2)
+                    img.style.left = `${pos.x - 30}px`; // 30 = width/2 của ảnh nhỏ (60px/2)
+                    img.style.top = `${pos.y - 30}px`; // 30 = height/2 của ảnh nhỏ (60px/2)
                     img.style.transform = 'translate(0, 0)';
                     img.style.opacity = '1';
-                }, index * 15); // Stagger animation
+                    img.style.zIndex = '10';
+                    // CSS sẽ tự động thu nhỏ ảnh từ 160px xuống 60px qua transition
+                }, index * 10); // Stagger animation nhanh hơn
             }
         });
     });
     
     console.log(`Đã tạo ${numHearts} trái tim từ ${totalImages} ảnh`);
+    
+    // Sau khi tạo trái tim xong, di chuyển lyrics vào giữa
+    setTimeout(() => {
+        const lyricsContainer = document.querySelector('.lyrics-container');
+        if (lyricsContainer) {
+            lyricsContainer.classList.add('in-center');
+        }
+    }, 2000); // Đợi 2 giây sau khi bắt đầu sắp xếp
 }
 
 function showMemoryPhotos(images) {
@@ -471,14 +492,13 @@ function showMemoryPhotos(images) {
     photoIndex = 0;
     
     // Tính toán khoảng cách: animation 6s, mỗi ảnh cách nhau 1s để không chồng lên nhau
-    // Với ảnh rộng 120px, cần khoảng cách tối thiểu 150px giữa các ảnh
     const intervalTime = 1000; // 1 giây giữa mỗi ảnh
     
     // Bắt đầu chạy ảnh liên tục, cách đều nhau
     photoInterval = setInterval(() => {
         if (photoIndex >= images.length) {
             clearInterval(photoInterval);
-            // Khi đã load hết ảnh, đợi một chút rồi sắp xếp thành trái tim
+            // Khi đã load hết ảnh, đợi ảnh cuối chạy xong rồi sắp xếp thành trái tim
             setTimeout(() => {
                 arrangeInHeart();
             }, 7000); // Đợi ảnh cuối chạy xong (6s animation + 1s buffer)
@@ -503,6 +523,9 @@ function showMemoryPhotos(images) {
             memoriesContainer.appendChild(img);
             allLoadedPhotos.push(img);
             
+            // Đánh dấu ảnh này cần giữ lại (không xóa)
+            img.dataset.keep = 'true';
+            
             // Hiện ảnh và bắt đầu animation chạy
             setTimeout(() => {
                 img.classList.add('visible');
@@ -514,15 +537,41 @@ function showMemoryPhotos(images) {
 }
 
 function arrangeInHeart() {
-    // Dừng tất cả animation
-    allLoadedPhotos.forEach(img => {
+    console.log('Bắt đầu sắp xếp trái tim...');
+    console.log('Tổng số ảnh:', allLoadedPhotos.length);
+    
+    // Lấy tất cả ảnh từ DOM (đảm bảo lấy được tất cả)
+    const allImagesInDOM = Array.from(memoriesContainer.querySelectorAll('.memory-photo'));
+    console.log('Số ảnh trong DOM:', allImagesInDOM.length);
+    
+    // Dừng tất cả animation và đảm bảo ảnh hiển thị
+    allImagesInDOM.forEach(img => {
         img.style.animation = 'none';
+        img.style.transition = 'all 1.5s ease-out';
+        img.style.opacity = '1';
+        img.style.display = 'block';
     });
     
     // Lấy tất cả ảnh hợp lệ
-    const validPhotos = allLoadedPhotos.filter(img => img.style.display !== 'none');
+    const validPhotos = allImagesInDOM.filter(img => 
+        img.style.display !== 'none' && 
+        img.src && 
+        img.complete
+    );
     
-    // Tạo nhiều trái tim từ ảnh
+    console.log('Số ảnh hợp lệ để sắp xếp:', validPhotos.length);
+    
+    if (validPhotos.length === 0) {
+        console.log('Không có ảnh để sắp xếp!');
+        // Thử lại với allLoadedPhotos
+        if (allLoadedPhotos.length > 0) {
+            console.log('Thử với allLoadedPhotos:', allLoadedPhotos.length);
+            createMultipleHearts(allLoadedPhotos.filter(img => img.parentNode));
+        }
+        return;
+    }
+    
+    // Tạo trái tim từ ảnh
     createMultipleHearts(validPhotos);
 }
 
