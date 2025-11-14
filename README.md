@@ -1,5 +1,14 @@
 # Website Kỷ Niệm 3 Năm ❤️
 
+<div align="center">
+
+## 🌐 [👉 CLICK VÀO ĐÂY ĐỂ XEM WEBSITE 👈](https://nguyenquangminhfptu.github.io/3-yearCeremony/) 🌐
+
+[![Website](https://img.shields.io/badge/Website-Live-brightgreen)](https://nguyenquangminhfptu.github.io/3-yearCeremony/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub-Pages-blue)](https://nguyenquangminhfptu.github.io/3-yearCeremony/)
+
+</div>
+
 Website lãng mạn để kỷ niệm 3 năm yêu nhau với hiệu ứng pháo hoa, ảnh kỷ niệm và lời nhạc.
 
 ## Cấu Trúc File
