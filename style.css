@@ -345,27 +345,53 @@ body {
 
 .lyrics-display {
     text-align: center;
-    color: #fff;
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab, #ffb3c6, #ffc0cb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 1.8em;
     font-weight: bold;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
-                 0 0 40px rgba(255, 255, 255, 0.5),
-                 0 0 60px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 0 30px rgba(255, 107, 157, 0.8),
+                 0 0 60px rgba(255, 143, 171, 0.6),
+                 0 0 90px rgba(255, 192, 203, 0.4),
+                 0 0 120px rgba(255, 107, 157, 0.3);
     line-height: 1.6;
     max-width: 80%;
-    animation: lyricsGlow 2s ease-in-out infinite alternate;
+    animation: lyricsGlow 2s ease-in-out infinite alternate,
+               lyricsFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5));
 }
 
 @keyframes lyricsGlow {
-    from {
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
-                     0 0 40px rgba(255, 255, 255, 0.5),
-                     0 0 60px rgba(255, 255, 255, 0.3);
+    0% {
+        text-shadow: 0 0 30px rgba(255, 107, 157, 0.8),
+                     0 0 60px rgba(255, 143, 171, 0.6),
+                     0 0 90px rgba(255, 192, 203, 0.4),
+                     0 0 120px rgba(255, 107, 157, 0.3);
+        filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5));
     }
-    to {
-        text-shadow: 0 0 30px rgba(255, 255, 255, 1),
-                     0 0 50px rgba(255, 255, 255, 0.7),
-                     0 0 70px rgba(255, 255, 255, 0.5);
+    50% {
+        text-shadow: 0 0 40px rgba(255, 107, 157, 1),
+                     0 0 80px rgba(255, 143, 171, 0.8),
+                     0 0 120px rgba(255, 192, 203, 0.6),
+                     0 0 150px rgba(255, 107, 157, 0.5);
+        filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.8));
+    }
+    100% {
+        text-shadow: 0 0 30px rgba(255, 107, 157, 0.8),
+                     0 0 60px rgba(255, 143, 171, 0.6),
+                     0 0 90px rgba(255, 192, 203, 0.4),
+                     0 0 120px rgba(255, 107, 157, 0.3);
+        filter: drop-shadow(0 0 10px rgba(255, 107, 157, 0.5));
+    }
+}
+
+@keyframes lyricsFloat {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
     }
 }
 
@@ -373,14 +399,32 @@ body {
     display: block;
     opacity: 0;
     transform: translateY(50px);
-    animation: lyricsAppear 1s ease-out forwards;
-    margin: 10px 0;
+    animation: lyricsAppear 1.5s ease-out forwards;
+    margin: 15px 0;
+    background: linear-gradient(135deg, #ff6b9d, #ff8fab, #ffb3c6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 107, 157, 0.6),
+                 0 0 40px rgba(255, 143, 171, 0.4);
+    filter: drop-shadow(0 0 8px rgba(255, 107, 157, 0.4));
 }
 
 @keyframes lyricsAppear {
-    to {
+    0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.8);
+        filter: blur(10px);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(25px) scale(0.9);
+        filter: blur(5px);
+    }
+    100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
+        filter: blur(0px);
     }
 }
 
@@ -408,12 +452,12 @@ body {
 
 .memory-photo {
     position: absolute;
-    width: 180px;
-    height: 180px;
-    border-radius: 12px;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
     object-fit: cover;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6),
-                0 0 20px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6),
+                0 0 15px rgba(255, 255, 255, 0.3);
     opacity: 0;
     top: 50%;
     transform: translateY(-50%);
@@ -437,7 +481,7 @@ body {
 
 @keyframes slideAcross {
     0% {
-        left: -200px;
+        left: -120px;
         opacity: 0;
         transform: translateY(-50%) scale(0.7);
     }
@@ -593,8 +637,8 @@ body {
     }
     
     .memory-photo {
-        width: 150px;
-        height: 150px;
+        width: 80px;
+        height: 80px;
     }
     
     .password-input {

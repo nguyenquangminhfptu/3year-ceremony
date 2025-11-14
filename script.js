@@ -413,14 +413,12 @@ function createMultipleHearts(images) {
     }
     
     const totalImages = images.length;
-    const numHearts = 2; // Số lượng trái tim (2 trái tim lớn)
-    const imagesPerHeart = Math.floor(totalImages / numHearts);
-    const remainingImages = totalImages % numHearts;
+    const numHearts = 1; // Chỉ 1 trái tim lớn và rõ ràng
+    const imagesPerHeart = totalImages; // Tất cả ảnh vào 1 trái tim
     
-    // Vị trí 2 trái tim: trái và phải, ở giữa màn hình
+    // Vị trí 1 trái tim: ở giữa màn hình
     const heartConfigs = [
-        { centerX: window.innerWidth * 0.3, centerY: window.innerHeight * 0.5, scale: 0.35 },
-        { centerX: window.innerWidth * 0.7, centerY: window.innerHeight * 0.5, scale: 0.35 }
+        { centerX: window.innerWidth * 0.5, centerY: window.innerHeight * 0.5, scale: 0.5 }
     ];
     
     let imageIndex = 0;
@@ -455,11 +453,11 @@ function createMultipleHearts(images) {
                 
                 // Animation mượt mà
                 setTimeout(() => {
-                    img.style.left = `${pos.x - 90}px`;
-                    img.style.top = `${pos.y - 90}px`;
+                    img.style.left = `${pos.x - 50}px`; // 50 = width/2 (100px/2)
+                    img.style.top = `${pos.y - 50}px`; // 50 = height/2 (100px/2)
                     img.style.transform = 'translate(0, 0)';
                     img.style.opacity = '1';
-                }, index * 20); // Stagger animation
+                }, index * 15); // Stagger animation
             }
         });
     });
