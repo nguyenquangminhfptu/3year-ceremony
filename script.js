@@ -413,16 +413,14 @@ function createMultipleHearts(images) {
     }
     
     const totalImages = images.length;
-    const numHearts = 4; // Số lượng trái tim
+    const numHearts = 2; // Số lượng trái tim (2 trái tim lớn)
     const imagesPerHeart = Math.floor(totalImages / numHearts);
     const remainingImages = totalImages % numHearts;
     
-    // Vị trí 4 trái tim: trên trái, trên phải, dưới trái, dưới phải
+    // Vị trí 2 trái tim: trái và phải, ở giữa màn hình
     const heartConfigs = [
-        { centerX: window.innerWidth * 0.25, centerY: window.innerHeight * 0.35, scale: 0.22 },
-        { centerX: window.innerWidth * 0.75, centerY: window.innerHeight * 0.35, scale: 0.22 },
-        { centerX: window.innerWidth * 0.25, centerY: window.innerHeight * 0.75, scale: 0.22 },
-        { centerX: window.innerWidth * 0.75, centerY: window.innerHeight * 0.75, scale: 0.22 }
+        { centerX: window.innerWidth * 0.3, centerY: window.innerHeight * 0.5, scale: 0.35 },
+        { centerX: window.innerWidth * 0.7, centerY: window.innerHeight * 0.5, scale: 0.35 }
     ];
     
     let imageIndex = 0;
