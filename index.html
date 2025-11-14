@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Years Together ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Màn hình password -->
+    <div id="passwordScreen" class="password-screen">
+        <button id="initialButton" class="initial-button">Enter Password to Open Gift</button>
+        <div id="passwordForm" class="password-form hidden">
+            <input type="password" id="passwordInput" class="password-input" placeholder="Nhập mật khẩu...">
+            <button id="submitPassword" class="submit-button">Mở Gift</button>
+            <p id="errorMessage" class="error-message"></p>
+        </div>
+    </div>
+
+    <!-- Màn hình bánh kem -->
+    <div id="cakeScreen" class="cake-screen hidden">
+        <div class="cake-container">
+            <h2 class="anniversary-text">Happy Three Years of US</h2>
+            <div class="cake-wrapper">
+                <img id="cakeImage" class="cake-image" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600" alt="Bánh kem kỷ niệm">
+                <div class="candles-container">
+                    <div class="candle" style="left: 35%;">
+                        <div class="flame"></div>
+                    </div>
+                    <div class="candle" style="left: 50%;">
+                        <div class="flame"></div>
+                    </div>
+                    <div class="candle" style="left: 65%;">
+                        <div class="flame"></div>
+                    </div>
+                </div>
+            </div>
+            <button id="blowCandleButton" class="blow-candle-button">Blow Out Candles 🕯️</button>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div id="mainContent" class="main-content hidden">
+        <div class="lyrics-container">
+            <div id="lyricsDisplay" class="lyrics-display"></div>
+        </div>
+        
+        <div class="memories-container" id="memoriesContainer"></div>
+        
+        <!-- Nút điều khiển nhạc -->
+        <div class="music-controls">
+            <button id="musicToggle" class="music-toggle" title="Tắt/Bật nhạc">🎵</button>
+            <input type="range" id="volumeControl" class="volume-control" min="0" max="100" value="50" title="Điều chỉnh âm lượng">
+        </div>
+    </div>
+
+    <!-- Audio player -->
+    <audio id="backgroundMusic" loop>
+        <source src="music/background.mp3" type="audio/mpeg">
+        <source src="music/background.ogg" type="audio/ogg">
+        <source src="music/background.wav" type="audio/wav">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
